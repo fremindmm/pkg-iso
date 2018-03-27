@@ -13,7 +13,7 @@ mkdir /registry
 tar -zxf /root/docker-registry.tar.gz -C /registry
 docker load < /root/registry.tar
 docker run -d -p 4000:5000 --restart=always --name registry -v /registry/:/var/lib/registry registry
-tar -zxf /root/kolla-ansible-4.0.3.dev36.tar.gz -C /opt
+tar -zxf /root/kolla-ansible-4.0.4.dev17.tar.gz -C /opt
 pip install --no-index --find-links=http://127.0.0.1:81/pypi pbr
 pip install --no-index --find-links=http://127.0.0.1:81/pypi ansible
 pip install --no-index --find-links=http://127.0.0.1:81/pypi zabbix-api

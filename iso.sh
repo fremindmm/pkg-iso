@@ -33,7 +33,7 @@ cd ${KOLLA_ANSIBLE_DIR}
 git pull
 rm -rf ${KOLLA_ANSIBLE_DIR}/dist/
 python setup.py  sdist
-cp -f ${KOLLA_ANSIBLE_DIR}/dist/*  ${MAKEISO_DIR}/extras/kolla-ansible-4.0.3.dev36.tar.gz
+cp -f ${KOLLA_ANSIBLE_DIR}/dist/*  ${MAKEISO_DIR}/extras/kolla-ansible-4.0.4.dev17.tar.gz
 
 ##pull and make iso##
 cd ${ISO_DIR}
