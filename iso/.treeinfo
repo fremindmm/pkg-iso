@@ -1,0 +1,32 @@
+[general]
+name = CentOS-Ocata
+family = CentOS
+timestamp = 1501137374.63
+variant = 
+version = Ocata
+packagedir = 
+arch = x86_64
+
+[stage2]
+mainimage = LiveOS/squashfs.img
+
+[images-x86_64]
+kernel = images/pxeboot/vmlinuz
+initrd = images/pxeboot/initrd.img
+upgrade = images/pxeboot/upgrade.img
+boot.iso = images/boot.iso
+
+[images-xen]
+kernel = images/pxeboot/vmlinuz
+initrd = images/pxeboot/initrd.img
+upgrade = images/pxeboot/upgrade.img
+
+[checksums]
+images/efiboot.img = sha256:6642e40fe1758698e9248776081f5e80a1aa8aebdfba9c73a3ac81c079045f40
+images/macboot.img = sha256:0aa2858e524c2c7cc816314efa2dc18e88ba8b21ac4f9a12dc9c55d89ebdc4da
+images/boot.iso = sha256:87b5d3f5be5435194a7aa90a565f8a99e40e3833b2199b665db5cbf8142771bd
+images/pxeboot/vmlinuz = sha256:d1c95530f7b44dcd88b8738528637e989ce8a230bf1795f3ffe8711bb0294fa2
+images/pxeboot/initrd.img = sha256:7426c8ac968a7e0cf496497bf7399680c14b719efecd6ae2cf2ea59bdb844736
+images/pxeboot/upgrade.img = sha256:4f30a1ae3e8b546449556c290e76b0ea302aa1597ab8fe1a6c65cb3cf8a19fef
+repodata/repomd.xml = sha256:29be07ec9b422ad6e5834152a93bdec21da10d4399e4e4c432ad40548321ebbd
+
