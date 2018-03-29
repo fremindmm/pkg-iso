@@ -1,0 +1,5 @@
+F cobbler.tar                                                                                                                                                                                                     	cobbler.tar
+F docker-registry.tar.gz                                                                                                                                                                                          	docker-registry.tar.gz
+F init.sh                                                                                                                                                                                                         	init.sh
+F kolla-ansible-4.0.4.dev19.tar.gz                                                                                                                                                                               	kolla-ansible-4.0.4.dev19.tar.gz
+F registry.tar                                                                                                                                                                                                    	registry.tar

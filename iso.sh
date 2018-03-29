@@ -16,7 +16,7 @@ echo ${MAKEISO_DIR}
 TAG="4.0.4"
 
 ISO_DIR=${CURRENT_DIR}/iso
-TARGET_FILE="CentOS-Ocata-x86_64.iso"
+TARGET_FILE="YiheOS.iso"
 FTP_URL=ftp://ftp.openstack-ci.com/images
 echo ${ISO_DIR}
 
@@ -31,9 +31,19 @@ cp -L ${TARGET_DIR}/latest ${MAKEISO_DIR}/extras/docker-registry.tar.gz
 #pull kolla-ansible and update to iso
 cd ${KOLLA_ANSIBLE_DIR}
 git pull
+#set kolla-ansible version
+OLD_V=`grep "kolla-ansible" ${MAKEISO_DIR}/images/ks.cfg|awk -F'/' '{print $6}'`
+
 rm -rf ${KOLLA_ANSIBLE_DIR}/dist/
-python setup.py  sdist
-cp -f ${KOLLA_ANSIBLE_DIR}/dist/*  ${MAKEISO_DIR}/extras/kolla-ansible-4.0.4.dev17.tar.gz
+python setup.py  sdist 2>&1 >/dev/null
+NEW_V=`ls /root/jenkins/kolla-ansible/dist`
+cp -f ${KOLLA_ANSIBLE_DIR}/dist/*  ${MAKEISO_DIR}/extras/
+
+if [ ! "${OLD_V%% *}" = $NEW_V ];then
+sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/extras/init.sh
+sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/extras/TRANS.TBL
+sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/images/ks.cfg
+fi
 
 ##pull and make iso##
 cd ${ISO_DIR}
@@ -47,7 +57,7 @@ cp -rf isolinux/* ${MAKEISO_DIR}/isolinux
 cp -rf mkiso.sh  ${MAKEISO_DIR}
 cd ${MAKEISO_DIR}
 bash mkiso.sh
-mv $TARGET_FILE  CentOS-Ocata-x86_64-${TAG}-${date}.iso
+mv $TARGET_FILE  YiheOS-${TAG}-${date}.iso
 
 
 ##upload iso to ftp##
@@ -56,7 +66,7 @@ mv $TARGET_FILE  CentOS-Ocata-x86_64-${TAG}-${date}.iso
 #user administrator 123456a?
 #cd openstack_ocata_iso/cicd_iso
 #bin
-#put CentOS-Ocata-x86_64-${TAG}-${date}-jilin.iso
+#put YiheOS-${TAG}-${date}-jilin.iso
 #close
 #bye
 #!
