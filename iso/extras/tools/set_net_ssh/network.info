@@ -1,0 +1,9 @@
+#edit this file 
+#looks like
+#
+#device_name  device_name  bond_name       ipaddr-prefix      gateway  
+# |           |            |               |                  |
+#eno1         eno2         bond0           100.100.1.1        100.100.1.254
+ens192	      ens9999	   admin	   192.168.46         192.168.46.1
+ens224	      ens9999	   public	   
+ens256        ens9999	   storage         192.168.3   

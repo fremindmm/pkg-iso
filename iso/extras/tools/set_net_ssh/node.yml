@@ -1,0 +1,7 @@
+---
+  - hosts: pxe
+    tasks: 
+      - name : copy sn_ip.file
+        template : src=./sn_ip.file dest=/tmp/sn_ip.file owner=root group=root mode=0644 
+      - name : copy hosts
+        template : src=/etc/hosts dest=/etc/hosts owner=root group=root mode=0644 

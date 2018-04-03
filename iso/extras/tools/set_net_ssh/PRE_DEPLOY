@@ -1,0 +1,50 @@
+[规划pxe网络，批量部署操作系统]
+前提：部署节点安装操作系统ok
+
+1.pxe 网段规划   pxe工具cobbler 默认使用服务器第一块网卡，pxe节点即部署节点，同时复用为控制节点
+例如，100个节点的情况，3个控制节点，3个网络节点，3个监控节点，91个计算节点 
+每个节点5个网卡，第一块网卡为pxe网络，剩余4块网卡做4个bond，为openstack提供网络接口
+
+2.在部署节点准备pxe环境 
+ssh 192.168.23.101
+#检查pxe服务容器是否正常
+#docker ps -a |grep cobbler
+回显如下则容器启动正常，
+#afa5166b3403        cobbler             "/usr/bin/supervisord"   13 minutes ago      Up 12 minutes                                cobbler
+否则执行如下命令，启动容器
+#docker start cobbler 
+
+3.根据规划修改目标pxe范围
+ip范围为 192.168.23.102-106
+修改开始位置为102
+docker exec -u root cobbler sed -i /dynamic-bootp/s/\(2/\(102/g /usr/share/ansible/templates/dhcp.template
+修改结束位置为106
+docker exec -u root cobbler sed -i /dynamic-bootp/s/\(-2/\(106/g /usr/share/ansible/templates/dhcp.template
+查看修改结果
+docker exec -u root cobbler cat /usr/share/ansible/templates/dhcp.template |grep dynamic-bootp
+未修改前
+range dynamic-bootp        {{ net_mask | ipaddr(2) | ipaddr('address')}} {{ net_mask | ipaddr(-2) | ipaddr('address')}};
+修改后
+range dynamic-bootp        {{ net_mask | ipaddr(102) | ipaddr('address')}} {{ net_mask | ipaddr(106) | ipaddr('address')}};
+
+5.重启容器查看配置修改是否生效
+# docker stop cobbler && docker start cobbler && sleep 60  &&docker exec  -u root cobbler cat /etc/dhcp/dhcpd.conf |grep range
+回显如下ip范围是规划的范围则 pxe准备ok
+cobbler
+cobbler
+     range dynamic-bootp        192.168.23.102 192.168.23.106;
+如果配置范围没有生效 则检查pxe 网关 是否配置ok
+[root@control01 kolla]# route -n |head -3
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.23.1    0.0.0.0         UG    0      0        0 ens33
+如果默认Gateway不是pxe的网关 则使用如下命令进行修改，
+删除错误路由
+route del -net 0.0.0.0 gw 100.2.30.1
+添加pxe路由
+route add default gw 192.168.23.1
+重启pxe服务查看是否修改生效
+# docker stop cobbler && docker start cobbler && sleep 60  &&docker exec  -u root cobbler cat /etc/dhcp/dhcpd.conf |grep range
+
+6.启动其他99台虚拟机，开始pxe安装系统, 安装完成后，开始进行下一步
+

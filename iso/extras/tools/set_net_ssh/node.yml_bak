@@ -1,0 +1,19 @@
+---
+  - hosts: pxe
+    tasks: 
+      - name : copy sn_ip.file
+        template : src=./sn_ip.file dest=/tmp/sn_ip.file owner=root group=root mode=0644 
+      - name : copy network.info 
+        template : src=./network.info dest=/tmp/network.info owner=root group=root mode=0644 
+      - name : copy init_config.sh
+        template : src=./init_config.sh dest=/tmp/init_config.sh owner=root group=root mode=0644 
+      - name : copy config_bond.sh
+        template : src=./config_bond.sh dest=/tmp/config_bond.sh owner=root group=root mode=0644 
+      - name : copy hosts
+        template : src=/etc/hosts dest=/etc/hosts owner=root group=root mode=0644 
+      - name : copy authorized_keys
+        template : src=/root/.ssh/id_rsa.pub dest=/tmp/authorized_keys owner=root group=root mode=0644 
+      - name : run init_conf.sh
+        command : sh /tmp/init_config.sh
+      - name : run config_bond.sh
+        command : sh /tmp/config_bond.sh

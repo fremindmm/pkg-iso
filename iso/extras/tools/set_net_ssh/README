@@ -1,0 +1,31 @@
+###########
+# 1.Edit sn_ip.file
+# Save the server's Serial Number, hostname and management ip per line.
+# 
+#
+# 2.Run main.sh and check pxe network.
+# sh main.sh
+# ansible pxe -m ping 
+#
+# 3.Edit network.info,and Confirm all the node's interface names are the same.
+# ansible pxe -m shell -a "ip a | grep -E 'en.*: ' | awk -F':' '{print $2}'" -k
+# save the interfaces and bond info per line.
+#
+# 4.do ansible playbook.
+# ansible-playbook  node.yml -k
+# Then input the root's password.
+#
+#
+# 5.Add fingerprint on deploy node.
+# for host in `cat /tmp/sn_ip.file |awk '{print $3}'`;do ssh-keyscan -t ecdsa  $host >> /root/.ssh/known_hosts ; done
+# for host in `cat /tmp/sn_ip.file |awk '{print $2}'`;do ssh-keyscan -t ecdsa  $host >> /root/.ssh/known_hosts ; done
+# Then check managemet network status.
+# ansible node -m ping 
+#
+#
+# 6.Check the config file and check the config, then restart network on all the nodes.
+# ansible node -m shell -a "cat /etc/sysconfig/network-scripts/ifcfg-bond* | grep IPADDR"
+# ansible node -m shell -a "md5sum /etc/hosts"|grep -v SUCCESS
+# ansible node -m shell -a "systemctl restart network"
+# ansible node -m shell -a "route -n"
+# ansible node -m shell -a "ip a"
