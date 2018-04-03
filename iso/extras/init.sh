@@ -24,5 +24,5 @@ pip install --no-index --find-links=http://127.0.0.1:81/pypi -r /opt/kolla-ansib
 cp -r /opt/kolla-ansible*/etc/kolla /etc
 sed -i -e "s/eth0/$(ip -o link | cut -d: -f2 | sed -n 's/ //;2p')/" -e "s/eth1/$(ip -o link | cut -d: -f2 | sed -n 's/ //;3p')/" -e "s/10.10.10.254/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" -e "s/172.16.0.10/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" /etc/kolla/globals.yml
 /opt/kolla-ansible*/tools/generate_passwords.py 
-rm -rf /root/* /tmp/*
+#rm -rf /root/* /tmp/*
 mv /opt/kolla-ansible* /root
