@@ -13,7 +13,7 @@ mkdir /registry
 tar -zxf /root/docker-registry.tar.gz -C /registry
 docker load < /root/registry.tar
 docker run -d -p 4000:5000 --restart=always --name registry -v /registry/:/var/lib/registry registry
-tar -zxf /root/kolla-ansible-4.0.4.tar.gz -C /opt
+tar -zxf /root/kolla-ansible-4.0.3.dev36.tar.gz -C /opt
 pip install --no-index --find-links=http://127.0.0.1:81/pypi pbr
 pip install --no-index --find-links=http://127.0.0.1:81/pypi ansible
 pip install --no-index --find-links=http://127.0.0.1:81/pypi zabbix-api
@@ -21,6 +21,7 @@ pip install --no-index --find-links=http://127.0.0.1:81/pypi shade
 pip install --no-index --find-links=http://127.0.0.1:81/pypi pywinrm
 pip install --no-index --find-links=http://127.0.0.1:81/pypi elasticsearch
 pip install --no-index --find-links=http://127.0.0.1:81/pypi -r /opt/kolla-ansible*/requirements.txt
+pip install --no-index --find-links=http://127.0.0.1:81/pypi -r /opt/kolla-ansible*/requirements.txt -y
 cp -r /opt/kolla-ansible*/etc/kolla /etc
 sed -i -e "s/eth0/$(ip -o link | cut -d: -f2 | sed -n 's/ //;2p')/" -e "s/eth1/$(ip -o link | cut -d: -f2 | sed -n 's/ //;3p')/" -e "s/10.10.10.254/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" -e "s/172.16.0.10/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" /etc/kolla/globals.yml
 /opt/kolla-ansible*/tools/generate_passwords.py 

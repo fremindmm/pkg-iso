@@ -8,15 +8,15 @@ docker start cobbler
 function pxe_set(){
    if [ "$1" = "start" ];then
        docker exec -u root cobbler sed -i 's/default=0/default=1/g' /etc/cobbler/pxe/efidefault.template
-       docker exec -u root cobbler mv /etc/cobbler/pxe/pxedefault.template_start /etc/cobbler/pxe/pxedefault.template
+       docker exec -u root cobbler cp /etc/cobbler/pxe/pxedefault.template_start /etc/cobbler/pxe/pxedefault.template
        docker restart cobbler
    else
        docker exec -u root cobbler sed -i 's/default=1/default=0/g' /etc/cobbler/pxe/efidefault.template
-       docker exec -u root cobbler mv /etc/cobbler/pxe/pxedefault.template_stop /etc/cobbler/pxe/pxedefault.template
+       docker exec -u root cobbler cp /etc/cobbler/pxe/pxedefault.template_stop /etc/cobbler/pxe/pxedefault.template
        docker restart cobbler
    fi
 }
-pxe_set start
+#pxe_set start
 docker exec -it cobbler cat /var/lib/dhcpd/dhcpd.leases |grep '^lease'| cut -d' ' -f2| sort -u|xargs -I {} echo {} >> /etc/ansible/hosts
 pxe_set stop 
 cat /etc/ansible/hosts | grep -v ^[[]
