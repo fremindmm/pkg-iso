@@ -13,7 +13,7 @@ CURRENT_DIR=$(readlink -f "$(dirname $0)")
 FARTHER_DIR=${CURRENT_DIR}/..
 MAKEISO_DIR=${FARTHER_DIR}/mkiso
 echo ${MAKEISO_DIR}
-TAG="4.0.4"
+TAG="4.0.2"
 
 ISO_DIR=${CURRENT_DIR}/iso
 TARGET_FILE="YiheOS.iso"
@@ -30,14 +30,16 @@ cp -L ${TARGET_DIR}/latest ${MAKEISO_DIR}/extras/docker-registry.tar.gz
 
 #pull kolla-ansible and update to iso
 cd ${KOLLA_ANSIBLE_DIR}
-git pull
+#git pull
 #set kolla-ansible version
 OLD_V=`grep "kolla-ansible" ${MAKEISO_DIR}/images/ks.cfg|awk -F'/' '{print $6}'`
 
-rm -rf ${KOLLA_ANSIBLE_DIR}/dist/
-python setup.py  sdist 2>&1 >/dev/null
+#rm -rf ${KOLLA_ANSIBLE_DIR}/dist/
+#python setup.py  sdist 2>&1 >/dev/null
+#pkg kolla-ansible source can't packege use /root/jenkins/kolla-ansible-4.0.3.dev36.tar.gz
+
 NEW_V=`ls /root/jenkins/kolla-ansible/dist`
-cp -f ${KOLLA_ANSIBLE_DIR}/dist/*  ${MAKEISO_DIR}/extras/
+cp -f ${KOLLA_ANSIBLE_DIR}/../kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
 
 if [ ! "${OLD_V%% *}" = $NEW_V ];then
 sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/extras/init.sh
