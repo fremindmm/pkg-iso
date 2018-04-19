@@ -1,0 +1,6 @@
+---
+- name: init ceph node disk 
+  shell: ansible ceph -m script -a "/root/tools/init_ceph_disk.sh {{item}}"
+  with_items:
+    - "{{ceph_disk_list}}"
+  tags: ceph

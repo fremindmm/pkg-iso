@@ -1,0 +1,3 @@
+---
+- name: genrate swift node list to /etc/ansible/hosts
+  shell: bash /root/tools/genrate_swift_iplist.sh

@@ -1,0 +1,30 @@
+---
+- name: ping all pxe node to checking all node is ok
+  ping:
+  tags: pxe
+
+- name: copy script set_pxe_static.sh to /tmp
+  copy: src=/root/tools/set_pxe_static.sh dest=/tmp/
+  run_once: False
+- name: set pxe network to static include gateway
+  shell: bash /tmp/set_pxe_static.sh {{pxe_net_card_name}} {{pxe_gateway}}
+  run_once: False
+
+- name: copy script add_vlan_interface.sh to /tmp
+  copy: src=/root/tools/add_vlan_interface.sh dest=/tmp/
+  run_once: False
+
+- name: add vlan network for admin
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} {{admin_gateway}}
+  run_once: False
+
+- name: add vlan network for external
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
+  run_once: False
+  
+- name: add vlan network for storage
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
+  run_once: False
+
+- name: restart network
+  shell: service network restart

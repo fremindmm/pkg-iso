@@ -1,0 +1,20 @@
+---
+- name: get the network connection ip 
+  shell: |
+    ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
+  register: netinfo
+  ignore_errors: yes
+  with_nested:
+    - "{{ groups['all'] }}"
+    - ["{{vlan_card_name}}.{{admin_vlanid}}", "{{vlan_card_name}}.{{external_vlanid}}", "{{vlan_card_name}}.{{storage_vlanid}}"]
+  
+#- name: debug
+#  debug: var=netinfo
+
+- name: echo the no ping ip
+  shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
+  with_items:
+   - "{{ netinfo.results }}"
+  when: item.rc != 0
+  delegate_to: localhost  
+

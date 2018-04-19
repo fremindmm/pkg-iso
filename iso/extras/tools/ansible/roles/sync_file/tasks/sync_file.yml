@@ -1,0 +1,12 @@
+---
+- name : sync /etc/hosts to all node /etc/
+  template : src=/etc/hosts dest=/etc/hosts owner=root group=root mode=0644
+
+- name: sync /root/tools/etc/pre_deploy/plan_table to all node /tmp/
+  template : src=/root/tools/etc/pre_deploy/plan_table dest=/tmp/plan_table owner=root group=root mode=0644
+- name : sync set_hostname.sh to all node /etc/
+  template : src=/root/tools/set_net_ssh/set_hostname.sh dest=/tmp/set_hostname.sh owner=root group=root mode=0644
+- name : set all node hostname by plan_table
+  shell: bash /tmp/set_hostname.sh
+- name: check after set hostname ip connections
+  ping:

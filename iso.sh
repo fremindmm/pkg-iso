@@ -21,7 +21,7 @@ FTP_URL=ftp://ftp.openstack-ci.com/images
 echo ${ISO_DIR}
 
 TARGET_DIR="/root/jenkins/target_registry"
-KOLLA_ANSIBLE_DIR="/root/jenkins/kolla-ansible"
+KOLLA_ANSIBLE_DIR="/root/jenkins/"
 
 date=`date +"%Y%m%d"`
 
@@ -29,7 +29,7 @@ date=`date +"%Y%m%d"`
 cp -L ${TARGET_DIR}/latest ${MAKEISO_DIR}/extras/docker-registry.tar.gz
 
 #pull kolla-ansible and update to iso
-cd ${KOLLA_ANSIBLE_DIR}
+#cd ${KOLLA_ANSIBLE_DIR}
 #git pull
 #set kolla-ansible version
 OLD_V=`grep "kolla-ansible" ${MAKEISO_DIR}/images/ks.cfg|awk -F'/' '{print $6}'`
@@ -38,8 +38,9 @@ OLD_V=`grep "kolla-ansible" ${MAKEISO_DIR}/images/ks.cfg|awk -F'/' '{print $6}'`
 #python setup.py  sdist 2>&1 >/dev/null
 #pkg kolla-ansible source can't packege use /root/jenkins/kolla-ansible-4.0.3.dev36.tar.gz
 
-NEW_V=`ls /root/jenkins/kolla-ansible/dist`
-cp -f ${KOLLA_ANSIBLE_DIR}/../kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
+#NEW_V=`ls /root/jenkins/kolla-ansible/dist`
+NEW_V=kolla-ansible-4.0.3.dev36.tar.gz
+cp -f ${KOLLA_ANSIBLE_DIR}/kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
 
 if [ ! "${OLD_V%% *}" = $NEW_V ];then
 sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/extras/init.sh

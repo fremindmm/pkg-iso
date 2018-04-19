@@ -1,7 +1,8 @@
 #!/bin/bash
 set -o xtrace
 set -e
-for dev in sdb sdc sdd
+DISK_LIST=$*
+for dev in ${DISK_LIST}
      do
      echo $dev
      dd if=/dev/zero of=/dev/$dev bs=1M count=10240

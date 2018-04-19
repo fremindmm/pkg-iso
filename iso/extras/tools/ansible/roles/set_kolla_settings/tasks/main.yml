@@ -1,0 +1,4 @@
+---
+- include: set_globals.yml
+- include: set_passwords.yml
+- include: set_multinode.yml

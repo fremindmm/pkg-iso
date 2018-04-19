@@ -1,0 +1,5 @@
+---
+- name: set ansible hosts for ops by plan_table and pxeiplist
+  shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{vlan_card_name}}.{{admin_vlanid}}
+
+

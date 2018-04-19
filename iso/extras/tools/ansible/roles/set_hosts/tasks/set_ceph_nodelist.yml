@@ -1,0 +1,3 @@
+---
+- name: generate ceph node list
+  shell: bash /root/tools/genrate_ceph_iplist.sh 

@@ -1,0 +1,5 @@
+---
+- include: set_ansible_hosts.yml
+- include: sync_time.yml
+- include: set_ceph_nodelist.yml
+- include: set_swift_nodelist.yml

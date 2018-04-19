@@ -1,0 +1,4 @@
+---
+- include: genrate_settings.yml
+- include: prepare_deploy.yml
+- include: precheck_settings.yml

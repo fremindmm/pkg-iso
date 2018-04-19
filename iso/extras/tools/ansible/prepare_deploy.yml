@@ -1,0 +1,18 @@
+---
+#only for deploy node exec
+#
+- name: prepare deploy
+  hosts: deploy
+  roles:
+    - set_hosts
+    - ceph
+    - swift
+
+- name: prepare openstack settings
+  hosts: deploy
+  roles:
+    - set_kolla_settings
+- name: sync file
+  hosts: all
+  roles:
+    - sync_file

@@ -1,0 +1,30 @@
+pxe_net_card_name: "enp11s0f0"
+pxe_gateway: "192.168.93.1"
+pxe_ip_segment: "192.168.93"
+vlan_card_name: "enp11s0f1"
+
+#admin
+admin_vlanid: "1001"
+admin_ip_segment: "192.168.94"
+admin_gateway: "192.168.94.1"
+
+#external
+external_vlanid: "1002"
+external_ip_segment: "192.168.95"
+
+#storage
+storage_vlanid: "1003"
+storage_ip_segment: "192.168.96"
+swift_disk_list: "sdc"
+ceph_disk_list: [sdb,]
+swift_storage_networklist: "192.168.96.3 192.168.96.5"
+swift_one_node_hostname: "control01"
+#Openstack custom configragtion
+
+kolla_internal_vip_address: "192.168.94.111"
+network_interface: "enp11s0f1.1001"
+storage_interface: "enp11s0f1.1003"
+cluster_interface: "enp11s0f1.1003"
+tunnel_interface: "enp11s0f1.1001"
+neutron_external_interface: "enp11s0f1.1002"
+

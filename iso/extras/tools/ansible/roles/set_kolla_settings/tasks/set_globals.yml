@@ -1,0 +1,5 @@
+---
+- name: set /root/tools/etc/pre_deploy/global.yml
+  shell: bash /root/tools/set_globals.sh
+- name: copy /root/tools/etc/kolla/globals.yml to /etc/kolla/
+  copy: src=/root/tools/etc/kolla/globals.yml dest=/etc/kolla/globals.yml

@@ -1,0 +1,16 @@
+---
+- name: init swift node disk 
+  shell: ansible swift -m script -a "/root/tools/swift_add_label.sh {{swift_disk_list}}"
+  tags: swift
+
+- name: init swift rings
+  shell: ansible swift -m script -a "/root/tools/swift_rings.sh {{swift_storage_networklist}}"
+  tags: swift
+
+- name: mkdir /etc/kolla/config
+  file: path=/etc/kolla/config state=directory
+  tags: swift
+
+- name: cp swift settings to deploy node
+  shell: scp -r {{swift_one_node_hostname}}:/etc/kolla/config/swift /etc/kolla/config/  
+  tags: swift

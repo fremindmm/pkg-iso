@@ -1,0 +1,2 @@
+---
+- include: check_ip_connection.yml

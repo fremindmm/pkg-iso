@@ -1,0 +1,5 @@
+
+99C2672 control01 192.168.94.3 ceph swift
+99C4945 compute01 192.168.94.4 
+99AN208 control02 192.168.94.5 ceph swift
+99E1968 control03 192.168.94.6 ceph

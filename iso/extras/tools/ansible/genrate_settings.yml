@@ -1,0 +1,7 @@
+---
+- hosts: deploy
+  roles:
+    - init
+- hosts: pxe
+  roles:
+    - common

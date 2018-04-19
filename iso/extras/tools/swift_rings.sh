@@ -2,9 +2,10 @@
 set -o xtrace
 set -e
 
-STORAGE_NODES=(192.168.96.107 192.168.96.108)
+STORAGE_NODES=$*
 KOLLA_SWIFT_BASE_IMAGE="deploy:4000/99cloud/centos-source-swift-base:4.0.2.1"
 
+rm -rf /etc/kolla/config/swift
 mkdir -p /etc/kolla/config/swift
 
 # Object ring
@@ -15,7 +16,7 @@ docker run \
   swift-ring-builder \
     /etc/kolla/config/swift/object.builder create 10 3 1
 
-for node in ${STORAGE_NODES[@]}; do
+for node in ${STORAGE_NODES}; do
     for i in {0..2}; do
       docker run \
         --rm \
@@ -34,7 +35,7 @@ docker run \
   swift-ring-builder \
     /etc/kolla/config/swift/account.builder create 10 3 1
 
-for node in ${STORAGE_NODES[@]}; do
+for node in ${STORAGE_NODES}; do
     for i in {0..2}; do
       docker run \
         --rm \
@@ -53,7 +54,7 @@ docker run \
   swift-ring-builder \
     /etc/kolla/config/swift/container.builder create 10 3 1
 
-for node in ${STORAGE_NODES[@]}; do
+for node in ${STORAGE_NODES}; do
     for i in {0..2}; do
       docker run \
         --rm \
