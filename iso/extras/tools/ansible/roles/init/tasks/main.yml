@@ -2,15 +2,15 @@
 - name: genrate pxe ip list and add deploy ip to pxeiplist
   vars:
         IP: "{{ ansible_default_ipv4['address'] }}"
-  command: bash /root/tools/genrate_pxeiplist.sh {{IP}}
+  shell: bash /root/tools/genrate_pxeiplist.sh {{IP}}
   tags: init
 - name: genrate server serial
-  shell: ansible pxe -m setup -a "filter=ansible_*_serial" --tree /tmp/serial
+  shell: ansible -i /root/tools/ansible/inventory/default pxe -m setup -a "filter=ansible_*_serial" --tree /tmp/serial
   tags: init
 - name: genrate serial ip plan table to /root/tools/etc/pre_deploy/plan_table
   shell: bash /root/tools/paste.sh {{admin_ip_segment}} {{pxe_ip_segment}}
   tags: plan_table
-  run_once: True
+  run_once: False
 - name: print deploy node all interfaces
   vars: 
         INTERFACES: "{{ ansible_interfaces }}"

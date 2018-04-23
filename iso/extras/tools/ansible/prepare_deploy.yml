@@ -1,6 +1,10 @@
 ---
 #only for deploy node exec
 #
+- name: sync file
+  hosts: all
+  roles:
+    - sync_file
 - name: prepare deploy
   hosts: deploy
   roles:
@@ -12,7 +16,3 @@
   hosts: deploy
   roles:
     - set_kolla_settings
-- name: sync file
-  hosts: all
-  roles:
-    - sync_file
