@@ -4,7 +4,7 @@
 install
 # Keyboard layouts
 keyboard 'us'
-# Root password python -c 'import crypt; print(crypt.crypt("your password"))'
+# Root password
 rootpw --iscrypted $6$p2kJBD5OWSvXGhe7$TqvszSa2BkAQIZpG4yoYwdUXXMmh3mRbn9QGvGbr2pajDei.HYtVbPVu7ulDVre44bdgiw8sayUmflOEDwHz81
 # System timezone
 timezone Asia/Shanghai
@@ -15,14 +15,14 @@ firewall --disabled
 # System authorization information
 auth  --useshadow  --passalgo=sha512
 # Use CDROM installation media
-cdrom
+url --url=$tree
 # Use text mode install
 text
 # SELinux configuration
 selinux --disabled
 # Do not configure the X Window System
 skipx
-# Reboot after installation and eject cd
+# Reboot after installation
 reboot --eject
 
 %include /tmp/part-include
@@ -63,13 +63,13 @@ mariadb
 telnet
 python2-shaker
 screen
-tmux                                                                                                                                                                     
-python-tooz
+tmux
+python-tooz                                                                                                                                                              
 python2-PyMySQL
 %end
 %pre
 #!/bin/sh
-u=$(blkid | grep Ocata | cut -d: -f1)
+u=`blkid | grep Ocata | cut -d: -f1`
 for i in `ls /sys/block/ | grep -P "(vd|sd|hd)"`; do
     [[ $u =~ $i ]] && continue
     devices="$devices $i"
@@ -80,12 +80,6 @@ if [[ $# -eq 1 ]]; then
 fi
 exec < /dev/tty3 > /dev/tty3 2>&1
 chvt 3
-if [[ -z $devices ]]; then
-    echo "No disk found, install failed."
-    echo ""
-    read -p "Click keyboard to reboot:"
-    reboot
-fi
 while [[ -z $device ]]; do
     clear
     echo "Detect multiple disks:$devices"
@@ -96,7 +90,7 @@ while [[ -z $device ]]; do
         fi
     done
 done
-devicesize=$(cat "/sys/block/$device/size")
+devicesize=`cat "/sys/block/$device/size"`
 if [[ $devicesize -lt 419430400 ]]; then
     clear
     echo "Selected disk $device is less then 200G, install failed. "
@@ -105,7 +99,7 @@ if [[ $devicesize -lt 419430400 ]]; then
     reboot
 fi
 chvt 1
-btrfs=$(grep btrfs /proc/cmdline)
+btrfs=`grep btrfs /proc/cmdline`
 cat > /tmp/part-include << EOF
 ignoredisk --only-use=$device
 bootloader --location=mbr --driveorder=$device
@@ -124,32 +118,14 @@ echo "part btrfs.99 --size=90000 --fstype=btrfs" >> /tmp/part-include
 echo "btrfs none --label=c7 btrfs.99" >> /tmp/part-include
 echo "btrfs / --subvol --name=root LABEL=c7" >> /tmp/part-include
 fi
-cobbler=$(grep cobbler /proc/cmdline)
-nic=$(printf $(ip -o link | cut -d: -f2 | grep -v lo))
-eth0=$(for i in $(cat /proc/cmdline); do [[ $i =~ "ipaddr" ]] && echo $i; done)
-[ -z $eth0 ] && exit 0
-echo "network --bootproto static --device $nic --gateway $(echo $eth0 | cut -d: -f3) --hostname $(echo $eth0 | cut -d: -f4) --ip $(echo $eth0 | cut -d: -f1 | cut -d= -f2) --netmask $(echo $eth0 | cut -d: -f2) --onboot yes" >> /tmp/part-include
 %end
 %post
-cobbler=$(grep cobbler /proc/cmdline)
-if [[ -n $cobbler ]]; then
-echo "/root/init.sh" >> /etc/rc.d/rc.local && chmod +x /etc/rc.d/rc.local
-mkdir /root/.ssh
-ssh-keygen -q -t rsa -f /root/.ssh/id_rsa -N ""; cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
-tee /root/.ssh/config <<-'EOF'
-host *
-    StrictHostKeyChecking no
-    UserKnownHostsFile /dev/null
-EOF
-fi
-eth0=$(for i in $(cat /proc/cmdline); do [[ $i =~ "ipaddr" ]] && echo $i; done)
-echo "$(echo $eth0 | cut -d: -f1 | cut -d= -f2) $(echo $eth0 | cut -d: -f4)" >> /etc/hosts
-btrfs=$(grep btrfs /proc/cmdline)
 mkdir -p /etc/systemd/system/docker.service.d
 tee /etc/systemd/system/docker.service.d/kolla.conf <<-'EOF'
 [Service]
 MountFlags=shared
 EOF
+btrfs=`grep btrfs /proc/cmdline`
 mkdir /etc/docker
 if [[ -z $btrfs ]]; then
 tee /etc/docker/daemon.json <<-'EOF'
@@ -173,7 +149,7 @@ activation {
     thin_pool_autoextend_percent=20
 }
 EOF
-lvchange --metadataprofile docker-thinpool centos/docker
+lvchange --metadataprofile docker-thinpool centos/docker                                                                                                                
 echo "ExecStartPre=/usr/sbin/lvchange -ay /dev/centos/docker" >> /etc/systemd/system/docker.service.d/kolla.conf
 else
 tee /etc/docker/daemon.json <<-'EOF'
@@ -182,34 +158,20 @@ tee /etc/docker/daemon.json <<-'EOF'
   "log-opts": {
     "max-size": "20m",
     "max-file": "5"
-  }
+  }                                                                                                                                                                      
 }
 EOF
 fi
 systemctl disable postfix
 systemctl disable NetworkManager
-systemctl disable chronyd
+systemctl disable chronyd                                                                                                                                                
 systemctl enable docker
 echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
 echo -e "* soft nofile 65535\n* hard nofile 65535" >> /etc/security/limits.conf
 echo "nameserver 114.114.114.114" >> /etc/resolv.conf
 echo "UseDNS no" >> /etc/ssh/sshd_config
+mkdir /root/.ssh
+curl -o /root/.ssh/authorized_keys http://$http_server/cblr/pub/id_rsa.pub > /dev/null 2>&1
+[[ -n $name ]] && curl http://$http_server/cblr/svc/op/nopxe/system/$name
 rm -f /tmp/*
-%end
-%post --nochroot
-cobbler=$(grep cobbler /proc/cmdline)
-[[ -z $cobbler ]] && exit 0
-cp /run/install/repo/extras/init.sh /mnt/sysimage/root/
-cp /run/install/repo/extras/cobbler.tar /mnt/sysimage/root/
-#cp /run/install/repo/extras/CentOS-7.3-x86_64.ks /mnt/sysimage/var/lib/cobbler/kickstarts/CentOS-7.3-x86_64.ks
-mkdir /mnt/sysimage/var/lib/cobbler/webui_sessions && chown 48.root /mnt/sysimage/var/lib/cobbler/webui_sessions && chmod 700 /mnt/sysimage/var/lib/cobbler/webui_sessions
-cp /run/install/repo/extras/docker-registry.tar.gz /mnt/sysimage/root/
-cp /run/install/repo/extras/registry.tar /mnt/sysimage/root/
-cp /run/install/repo/extras/kolla-ansible-4.0.3.dev36.tar.gz /mnt/sysimage/root/
-cp -rf /run/install/repo/extras/tools /mnt/sysimage/root/
-cp /run/install/repo/extras/dep.tar.gz /mnt/sysimage/root/
-cp /run/install/repo/extras/cirros-0.3.4-x86_64-disk.img /mnt/sysimage/usr/share/
-rsync -a /run/install/repo/extras/loaders/ /mnt/sysimage/var/lib/cobbler/loaders/
-rsync -a --exclude extras/ /run/install/repo/ /mnt/sysimage/repo/
-echo "cobbler_interface: $(printf $(ip -o link | cut -d: -f2 | grep -v lo))" > /mnt/sysimage/repo/config.yml
 %end

@@ -63,14 +63,14 @@ bash mkiso.sh
 mv $TARGET_FILE  YiheOS-${TAG}-${date}.iso
 
 
-##upload iso to ftp##
-#ftp -vpn <<!
-#open 100.2.30.3
-#user administrator 123456a?
-#cd openstack_ocata_iso/cicd_iso
-#bin
-#put YiheOS-${TAG}-${date}-jilin.iso
-#close
-#bye
-#!
+#upload iso to ftp##
+ftp -vpn <<!
+open dl.yihecloud.com
+user ftp ftp
+cd iaasos/
+bin
+put YiheOS-${TAG}-${date}.iso
+close
+bye
+!
 

@@ -7,6 +7,8 @@ docker run -d --net=host --name cobbler -v /repo:/repo cobbler:1.0
 sleep 60
 docker cp /root/.ssh/id_rsa.pub cobbler:/var/www/cobbler/pub/
 docker exec cobbler cobbler import --name=CentOS-7 --path=/repo/ --kickstart=/var/lib/cobbler/kickstarts/centos-7.ks
+#set all netcard is eth*
+docker exec cobbler cobbler profile edit --name=CentOS-7-x86_64 --kopts='net.ifnames=0 biosdevname=0'
 #docker exec cobbler cobbler profile edit --name CentOS-7-x86_64 --kopts 'ipaddr=10.99.0.3:255.255.255.0:10.99.0.1:control02'
 #docker exec cobbler cobbler profile add --name CentOS-7.a-x86_64 --distro CentOS-7-x86_64 --kickstart /var/lib/cobbler/kickstarts/centos-7.a.ks --enable-menu=false
 mkdir /registry

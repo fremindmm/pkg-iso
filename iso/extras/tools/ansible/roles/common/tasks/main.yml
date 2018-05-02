@@ -26,5 +26,11 @@
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
   run_once: False
 
+- name: add tunnel network for vm to vm (vxlan)
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{tunnel_vlanid}} {{tunnel_ip_segment}}
+  run_once: False
+  tags: tunnel
+
 - name: restart network
   shell: service network restart
+  tags: restart_network
