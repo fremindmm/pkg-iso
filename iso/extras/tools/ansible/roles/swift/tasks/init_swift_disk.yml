@@ -15,7 +15,10 @@
   shell: scp -r {{swift_one_node_hostname}}:/etc/kolla/config/swift /etc/kolla/config/  
   tags: swift
 
-- name: genrate swift settings to deploy node
+- name: genrate swift iplist to deploy node
   shell: bash /root/tools/genrate_swift_iplist.sh
   tags: swift
-  run_once: True
+
+- name: genrate swift settings to deploy node
+  shell: bash /root/tools/genrate_swift_settings.sh
+  tags: swift

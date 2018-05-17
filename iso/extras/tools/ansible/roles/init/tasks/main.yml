@@ -1,9 +1,4 @@
 ---
-- name: genrate pxe ip list and add deploy ip to pxeiplist
-  vars:
-        IP: "{{ ansible_default_ipv4['address'] }}"
-  shell: bash /root/tools/genrate_pxeiplist.sh {{IP}}
-  tags: init
 - name: genrate server serial
   shell: ansible -i /root/tools/ansible/inventory/default pxe -m setup -a "filter=ansible_*_serial" --tree /tmp/serial
   tags: init
@@ -30,15 +25,21 @@
 
 ##deployment node does not configure the management gateway, which is ansible due to the inoperability of the gateway change
 - name: add vlan network for admin
-  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} 
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{admin_vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} 
   run_once: False
+  when: pxe_net_card_name != admin_vlan_card_name
 
 - name: add vlan network for external
-  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{external_vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
   run_once: False
 
 - name: add vlan network for storage
-  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{storage_vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
+  run_once: False
+
+- name: add tunnel network for vm to vm (vxlan)
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{tunnel_vlan_card_name}} {{tunnel_vlanid}} {{tunnel_ip_segment}}
+  when: tunnel_vlan_card_name != admin_vlan_card_name
   run_once: False
 
 - name: restart network

@@ -51,7 +51,7 @@ kolla_internal_vip_address: "10.10.10.254"
 # Below is an example of a private repository with authentication. Note the
 # Docker registry password can also be set in the passwords.yml file.
 
-docker_registry: "deploy:4000"
+docker_registry: "ops:4000"
 docker_namespace: "99cloud"
 #docker_registry_username: "sam"
 #docker_registry_password: "correcthorsebatterystaple"
@@ -175,7 +175,7 @@ enable_neutron_lbaas: "yes"
 enable_neutron_fwaas: "yes"
 enable_neutron_qos: "yes"
 enable_neutron_agent_ha: "yes"
-enable_neutron_vpnaas: "yes"
+enable_neutron_vpnaas: "no"
 #enable_nova_serialconsole_proxy: "no"
 #enable_octavia: "no"
 #enable_panko: "no"

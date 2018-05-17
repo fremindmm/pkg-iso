@@ -3,7 +3,7 @@ set -o xtrace
 set -e
 
 STORAGE_NODES=$*
-KOLLA_SWIFT_BASE_IMAGE="deploy:4000/99cloud/centos-source-swift-base:4.0.2.1"
+KOLLA_SWIFT_BASE_IMAGE="ops:4000/99cloud/centos-source-swift-base:4.0.2.1"
 
 rm -rf /etc/kolla/config/swift
 mkdir -p /etc/kolla/config/swift
