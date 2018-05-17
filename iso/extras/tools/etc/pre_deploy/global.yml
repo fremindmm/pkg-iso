@@ -4,15 +4,18 @@ pxe_ip_segment: "192.168.93"
 vlan_card_name: "enp11s0f1"
 
 #admin
+admin_vlan_card_name: "enp11s0f1"
 admin_vlanid: "1001"
 admin_ip_segment: "192.168.94"
 admin_gateway: "192.168.94.1"
 
 #external
+external_vlan_card_name: "enp11s0f1"
 external_vlanid: "1002"
 external_ip_segment: "192.168.95"
 
 #storage
+storage_vlan_card_name: "enp11s0f1"
 storage_vlanid: "1003"
 storage_ip_segment: "192.168.96"
 swift_disk_list: "sdc"
@@ -20,6 +23,7 @@ ceph_disk_list: [sdb,]
 swift_storage_networklist: "192.168.96.3 192.168.96.5"
 swift_one_node_hostname: "control01"
 #tunnel network for vm to vm
+tunnel_vlan_card_name: "enp11s0f1"
 tunnel_vlanid: "1004"
 tunnel_ip_segment: "192.168.97"
 #Openstack custom configragtion

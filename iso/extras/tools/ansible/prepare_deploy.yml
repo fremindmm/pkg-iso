@@ -11,6 +11,7 @@
     - set_hosts
     - ceph
     - swift
+    - neutron
 
 - name: prepare openstack settings
   hosts: deploy

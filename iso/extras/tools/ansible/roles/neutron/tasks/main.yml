@@ -1,0 +1,4 @@
+---
+- name: add plugin port security to ops node
+  shell: bash /root/tools/genrate_neutron_port_security_settings.sh
+  tags: neutrontest
