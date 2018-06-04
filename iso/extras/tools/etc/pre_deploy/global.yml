@@ -1,37 +1,44 @@
-pxe_net_card_name: "enp11s0f0"
-pxe_gateway: "192.168.93.1"
-pxe_ip_segment: "192.168.93"
-vlan_card_name: "enp11s0f1"
+pxe_net_card_name: "eth0"
+pxe_gateway: "192.168.82.1"
+pxe_ip_segment: "192.168.82"
+vlan_card_name: "eth1"
 
 #admin
-admin_vlan_card_name: "enp11s0f1"
-admin_vlanid: "1001"
-admin_ip_segment: "192.168.94"
-admin_gateway: "192.168.94.1"
+admin_vlan_card_name: "eth1"
+admin_vlanid: "83"
+admin_ip_segment: "192.168.83"
+admin_gateway: "192.168.83.1"
+#Tenant network and management network interworking network by vlan
+tm_vlan_card_name: "eth1"
 
-#external
-external_vlan_card_name: "enp11s0f1"
-external_vlanid: "1002"
-external_ip_segment: "192.168.95"
+#external flat ,Only used to verify the internal network connectivity of the switch's external network vlan，Ip segment arbitrary
+external_vlan_card_name: "eth2"
+external_vlanid: "601"
+external_ip_segment: "192.168.60"
 
 #storage
-storage_vlan_card_name: "enp11s0f1"
-storage_vlanid: "1003"
-storage_ip_segment: "192.168.96"
-swift_disk_list: "sdc"
-ceph_disk_list: [sdb,]
-swift_storage_networklist: "192.168.96.3 192.168.96.5"
-swift_one_node_hostname: "control01"
+storage_vlan_card_name: "eth3"
+storage_vlanid: "85"
+storage_ip_segment: "192.168.85"
+swift_disk_list: "sdd sde sdf"
+ceph_disk_list: [sdb,sdc]
+swift_storage_networklist: "192.168.85.6"
+swift_one_node_hostname: "computer02"
 #tunnel network for vm to vm
-tunnel_vlan_card_name: "enp11s0f1"
-tunnel_vlanid: "1004"
-tunnel_ip_segment: "192.168.97"
+tunnel_vlan_card_name: "eth2"
+tunnel_vlanid: "86"
+tunnel_ip_segment: "192.168.86"
+#If the admin network is multiplexed, an admin gateway needs to be configured for cross-network access.
 #Openstack custom configragtion
 
-kolla_internal_vip_address: "192.168.94.111"
-network_interface: "enp11s0f1.1001"
-storage_interface: "enp11s0f1.1003"
-cluster_interface: "enp11s0f1.1003"
-tunnel_interface: "enp11s0f1.1001"
-neutron_external_interface: "enp11s0f1.1002"
+network_interface: "eth1.83"
+kolla_internal_vip_address: "192.168.83.9"
+
+#kolla_external_vip_interface: "eth1.83"
+#kolla_external_vip_address: "192.168.83.111"
+
+storage_interface: "eth3.85"
+cluster_interface: "eth3.85"
+tunnel_interface: "eth2.86"
+neutron_external_interface: "eth2"
 

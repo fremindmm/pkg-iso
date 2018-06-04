@@ -24,6 +24,7 @@ function setup_swap(){
         sudo chmod 0600 /swapfile
         sudo mkswap /swapfile
         sudo /sbin/swapon /swapfile
+        sudo echo "/swapfile          swap                 swap    defaults 0 0">>/etc/fstab
     fi
 }
 setup_swap $SWAP_SIZE
