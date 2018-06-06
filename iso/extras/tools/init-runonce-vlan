@@ -54,9 +54,9 @@ openstack image create --disk-format qcow2 --container-format bare --public \
 
 
 echo Configuring neutron.
-openstack network create --share --provider-physical-network default --provider-network-type vlan public-vlan84
+openstack network create --share --provider-physical-network default --provider-network-type vlan public-vlan
 openstack subnet create \
-    --allocation-pool ${EXT_NET_RANGE} --network public-vlan84 \
+    --allocation-pool ${EXT_NET_RANGE} --network public-vlan \
     --subnet-range ${EXT_NET_CIDR} --gateway ${EXT_NET_GATEWAY} \
     --dns-nameserver 8.8.8.8 public1-subnet
 
@@ -113,7 +113,7 @@ if ! openstack flavor list | grep -q m1.tiny; then
     openstack flavor create --id 5 --ram 16384 --disk 160 --vcpus 8 m1.xlarge
 fi
 
-DEMO_NET_ID=$(openstack network list | awk '/ public-vlan84 / {print $2}')
+DEMO_NET_ID=$(openstack network list | awk '/ public-vlan / {print $2}')
 
 cat << EOF
 
@@ -126,5 +126,5 @@ openstack server create \\
     --flavor m1.tiny \\
     --key-name mykey \\
     --nic net-id=${DEMO_NET_ID} \\
-    demo1
+    demo-vlan
 EOF
