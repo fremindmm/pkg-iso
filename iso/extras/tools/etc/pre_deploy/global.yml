@@ -1,7 +1,7 @@
 pxe_net_card_name: "eth0"
 pxe_gateway: "192.168.82.1"
 pxe_ip_segment: "192.168.82"
-vlan_card_name: "eth1"
+#vlan_card_name: "eth1"
 
 #admin
 admin_vlan_card_name: "eth1"
@@ -29,6 +29,11 @@ tunnel_vlan_card_name: "eth2"
 tunnel_vlanid: "86"
 tunnel_ip_segment: "192.168.86"
 #If the admin network is multiplexed, an admin gateway needs to be configured for cross-network access.
+#set external vip interface for https
+https: "no"
+internal_vip_vlan_card_name: 'enp11s0f1'
+internal_vip_vlanid: "1006"
+internal_vip_ip_segment: "192.168.99"
 #Openstack custom configragtion
 
 network_interface: "eth1.83"

@@ -1,7 +1,7 @@
 ---
 - hosts: deploy
   roles:
-    - init
+    - ops
 - hosts: pxe
   roles:
-    - common
+    - node

@@ -10,6 +10,13 @@
     - "{{ groups['all'] }}"
     - ["{{admin_vlan_card_name}}.{{admin_vlanid}}", "{{external_vlan_card_name}}.{{external_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
 
+- name: echo the no ping ip
+  shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
+  with_items:
+   - "{{ netinfo.results }}"
+  when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name == tunnel_vlan_card_name and item.rc != 0
+  delegate_to: localhost  
+
 #Pxe is not multiplexed into the management network. The management network is not multiplexed into the service network.  
 - name: get the network connection ip 2
   shell: |
@@ -20,6 +27,14 @@
   with_nested:
     - "{{ groups['all'] }}"
     - ["{{admin_vlan_card_name}}.{{admin_vlanid}}","{{tunnel_vlan_card_name}}.{{tunnel_vlanid}}", "{{external_vlan_card_name}}.{{external_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
+
+- name: echo the no ping ip
+  shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
+  with_items:
+   - "{{ netinfo.results }}"
+  when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name != tunnel_vlan_card_name and item.rc != 0
+  delegate_to: localhost  
+
 
 - name: get the network connection ip 3
   shell: |
@@ -38,6 +53,6 @@
   shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
   with_items:
    - "{{ netinfo.results }}"
-  when: item.rc != 0
+  when: pxe_net_card_name == admin_vlan_card_name and item.rc != 0
   delegate_to: localhost  
 

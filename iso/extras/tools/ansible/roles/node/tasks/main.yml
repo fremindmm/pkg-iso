@@ -1,16 +1,7 @@
 ---
-- name: genrate server serial
-  shell: ansible -i /root/tools/ansible/inventory/default pxe -m setup -a "filter=ansible_*_serial" --tree /tmp/serial
-  tags: init
-- name: genrate serial ip plan table to /root/tools/etc/pre_deploy/plan_table
-  shell: bash /root/tools/paste.sh {{admin_ip_segment}} {{pxe_ip_segment}}
-  tags: plan_table
-  run_once: False
-- name: print deploy node all interfaces
-  vars: 
-        INTERFACES: "{{ ansible_interfaces }}"
-  debug: var=INTERFACES
-  tags: init
+- name: ping all pxe node to checking all node is ok
+  ping:
+  tags: pxe
 
 - name: copy script set_pxe_static.sh to /tmp
   copy: src=/root/tools/set_pxe_static.sh dest=/tmp/
@@ -23,24 +14,29 @@
   copy: src=/root/tools/add_vlan_interface.sh dest=/tmp/
   run_once: False
 
-##deployment node does not configure the management gateway, which is ansible due to the inoperability of the gateway change
 - name: add vlan network for admin
-  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{admin_vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} 
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{admin_vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} {{admin_gateway}}
   run_once: False
   when: pxe_net_card_name != admin_vlan_card_name
 
 - name: add vlan network for external
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{external_vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
   run_once: False
-
+  
 - name: add vlan network for storage
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{storage_vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
   run_once: False
 
 - name: add tunnel network for vm to vm (vxlan)
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{tunnel_vlan_card_name}} {{tunnel_vlanid}} {{tunnel_ip_segment}}
-  when: tunnel_vlan_card_name != admin_vlan_card_name
+  when: tunnel_vlanid != admin_vlanid
+  run_once: False
+
+- name: add internal vip interface for https
+  shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{internal_vip_vlan_card_name}} {{internal_vip_vlanid}} {{internal_vip_ip_segment}}
+  when: https == "yes"
   run_once: False
 
 - name: restart network
   shell: service network restart
+  tags: restart_network
