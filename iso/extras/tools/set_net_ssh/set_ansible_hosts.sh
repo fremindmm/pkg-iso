@@ -8,7 +8,6 @@ mkdir -p /etc/ansible
 echo "[pxe]" > /etc/ansible/hosts
 
 docker exec -i cobbler cat /var/lib/dhcpd/dhcpd.leases |grep '^lease'| cut -d' ' -f2| sort -u|xargs -I {} echo {} >> /etc/ansible/hosts
-
 # Add fingreprint on deploy node.
 #ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa << EOF
 # 
