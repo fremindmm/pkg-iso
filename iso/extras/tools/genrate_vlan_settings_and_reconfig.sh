@@ -12,4 +12,4 @@ bridge_mappings = physnet1:br-ex,default:br-eth1
 network_vlan_ranges = default:84:84 
 EOF
 ###reconfig
-kolla-ansible reconfigure -i /root/multinode -t neutron
+kolla-ansible reconfigure -t neutron
