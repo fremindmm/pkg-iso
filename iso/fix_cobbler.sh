@@ -35,9 +35,13 @@ docker tag registry.cn-hangzhou.aliyuncs.com/jeckxie/cobbler:1.0 cobbler:1.0
 
 #docker tag registry.cn-hangzhou.aliyuncs.com/jeckxie/cobbler:1.0 cobbler:1.0
 function save_to_pkg(){
+docker tag registry.cn-hangzhou.aliyuncs.com/jeckxie/cobbler:1.0 cobbler:1.0
 docker save -o /root/src/make-iso/pkg-iso/iso/extras/cobbler.tar cobbler:1.0
 }
-#save_to_pkg
+##for dev test cobbler image
 clean
 run
+##for package
+#build
+#save_to_pkg
 
