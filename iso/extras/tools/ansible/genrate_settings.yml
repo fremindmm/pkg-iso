@@ -3,5 +3,6 @@
   roles:
     - ops
 - hosts: pxe
+  gather_facts: no
   roles:
     - node
