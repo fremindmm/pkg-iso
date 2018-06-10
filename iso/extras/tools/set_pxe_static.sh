@@ -23,4 +23,4 @@ PREFIX=24
 ONBOOT=yes
 EOF
 fi
-service network restart
+#service network restart

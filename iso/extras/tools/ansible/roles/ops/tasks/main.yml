@@ -1,4 +1,12 @@
 ---
+- name: set ssh ControlPersist
+  shell: bash /root/tools/set_ssh.sh
+  run_once: true
+  tags: init
+- name: set ansible.cfg
+  shell: bash /root/tools/set_ansible.sh
+  run_once: true
+  tags: init
 - name: genrate server serial
   shell: ansible -i /root/tools/ansible/inventory/default pxe -m setup -a "filter=ansible_*_serial" --tree /tmp/serial
   tags: init
@@ -47,5 +55,8 @@
   when: https == "yes"
   run_once: False
   tags: ops
+#- name: restart network
+#  shell: service network restart
 - name: restart network
-  shell: service network restart
+  cron: name="restart network" job="systemctl restart network; sed -i '/restart network/d' /var/spool/cron/root"
+

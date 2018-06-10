@@ -1,6 +1,6 @@
 ---
 #The pxe is not multiplexed into the management network, and the management network is multiplexed into the service network.
-- name: get the network connection ip 1
+- name: get the network connection ip for admin,storage logic network
   shell: |
     ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
   when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name == tunnel_vlan_card_name
@@ -8,17 +8,17 @@
   ignore_errors: yes
   with_nested:
     - "{{ groups['all'] }}"
-    - ["{{admin_vlan_card_name}}.{{admin_vlanid}}", "{{external_vlan_card_name}}.{{external_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
+    - ["{{admin_vlan_card_name}}.{{admin_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
 
 - name: echo the no ping ip
   shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
   with_items:
    - "{{ netinfo.results }}"
   when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name == tunnel_vlan_card_name and item.rc != 0
-  delegate_to: localhost  
+  delegate_to: localhost 
 
 #Pxe is not multiplexed into the management network. The management network is not multiplexed into the service network.  
-- name: get the network connection ip 2
+- name: get the network connection ip for admin,tunnel,storage logic network
   shell: |
     ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
   when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name != tunnel_vlan_card_name
@@ -26,7 +26,7 @@
   ignore_errors: yes
   with_nested:
     - "{{ groups['all'] }}"
-    - ["{{admin_vlan_card_name}}.{{admin_vlanid}}","{{tunnel_vlan_card_name}}.{{tunnel_vlanid}}", "{{external_vlan_card_name}}.{{external_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
+    - ["{{admin_vlan_card_name}}.{{admin_vlanid}}","{{tunnel_vlan_card_name}}.{{tunnel_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
 
 - name: echo the no ping ip
   shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
@@ -36,7 +36,7 @@
   delegate_to: localhost  
 
 
-- name: get the network connection ip 3
+- name: get the network connection ip for admin logic network
   shell: |
     ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
   when: pxe_net_card_name == admin_vlan_card_name 
@@ -44,7 +44,7 @@
   ignore_errors: yes
   with_nested:
     - "{{ groups['all'] }}"
-    - ["{{tunnel_vlan_card_name}}.{{tunnel_vlanid}}", "{{external_vlan_card_name}}.{{external_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
+    - ["{{tunnel_vlan_card_name}}.{{tunnel_vlanid}}", "{{storage_vlan_card_name}}.{{storage_vlanid}}"]
   
 #- name: debug
 #  debug: var=netinfo
@@ -54,5 +54,30 @@
   with_items:
    - "{{ netinfo.results }}"
   when: pxe_net_card_name == admin_vlan_card_name and item.rc != 0
-  delegate_to: localhost  
+  delegate_to: localhost 
+
+#Check whether the external network needs to detect interoperability by using vip if it is available. If there is vip, it will not be detected.
+- name: ping internal vip 
+  command:  ping -c 2 "{{kolla_internal_vip_address}}"
+  when: pxe_net_card_name != admin_vlan_card_name and admin_vlan_card_name == tunnel_vlan_card_name
+  register: already_deploy
+  ignore_errors: yes
+
+- name: Check external network interface connectivity for external logic network
+  shell: |
+    ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
+  when: already_deploy|failed  
+  register: netinfo
+  ignore_errors: yes
+  with_nested:
+    - "{{ groups['all'] }}"
+    - ["{{external_vlan_card_name}}.{{external_vlanid}}", ]
+
+- name: echo the no ping ip
+  shell: echo "ip {{item.cmd}} is no ok" >> /tmp/noping.txt
+  with_items:
+   - "{{ netinfo.results }}"
+  when: already_deploy|failed 
+
+ 
 
