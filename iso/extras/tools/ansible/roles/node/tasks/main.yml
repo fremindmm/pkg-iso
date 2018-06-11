@@ -37,10 +37,7 @@
   when: https == "yes"
   run_once: False
 
-#- name: restart network
-#  shell: service network restart
-#  tags: restart_network
-# Automatic restart of the network after one minute
 - name: restart network
-  cron: name="restart network" job="systemctl restart network; sed -i '/restart network/d' /var/spool/cron/root"
+  shell: service network restart
   tags: restart_network
+
