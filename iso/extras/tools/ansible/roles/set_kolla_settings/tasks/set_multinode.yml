@@ -1,3 +1,4 @@
 ---
 - name: copy /root/tools/etc/pre_deploy/multinode to /root/
   copy: src=/root/tools/etc/pre_deploy/multinode dest=/root/
+  tags: [add, del]

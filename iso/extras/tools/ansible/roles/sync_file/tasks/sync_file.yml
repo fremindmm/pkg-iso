@@ -1,22 +1,26 @@
 ---
 #generate hosts file in ops node,hostname must to be "ops" !!!! 
-- name: set ansible hosts for ops by plan_table and pxeiplist
+- name: genrate /etc/hosts and /etc/ansible/hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{admin_vlan_card_name}}
   when: admin_vlan_card_name == pxe_net_card_name and ansible_hostname == "ops"
-  tags: filesync
-- name: set ansible hosts for ops by plan_table and pxeiplist
+  tags: ['add','del']
+- name: genrate /etc/hosts and /etc/ansible/hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{admin_vlan_card_name}}.{{admin_vlanid}}
   when: admin_vlan_card_name != pxe_net_card_name and ansible_hostname == "ops"
-  tags: filesync
+  tags: ['add','del'] 
 - name : sync /etc/hosts to all node /etc/
   template : src=/etc/hosts dest=/etc/hosts owner=root group=root mode=0644
-  tags: filesync
+  tags: ['add','del']
 
 - name: sync /root/tools/etc/pre_deploy/plan_table to all node /tmp/
   template : src=/root/tools/etc/pre_deploy/plan_table dest=/tmp/plan_table owner=root group=root mode=0644
+  tags: add
 - name : sync set_hostname.sh to all node /etc/
   template : src=/root/tools/set_net_ssh/set_hostname.sh dest=/tmp/set_hostname.sh owner=root group=root mode=0644
+  tags: add
 - name : set all node hostname by plan_table
   shell: bash /tmp/set_hostname.sh
+  tags: add
 - name: check after set hostname ip connections
   ping:
+  tags: add

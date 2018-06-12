@@ -1,3 +1,4 @@
 ---
 - name: sync deploy time to all node
   shell: bash /root/tools/sync_time.sh
+  tags: add
