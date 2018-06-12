@@ -2,19 +2,19 @@
 - name: set ansible hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{admin_vlan_card_name}}
   when: admin_vlan_card_name == pxe_net_card_name and https == "no" 
-  tags: set_hosts
+  tags: ['add','del']
 
 - name: set ansible hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{admin_vlan_card_name}}.{{admin_vlanid}}
   when: admin_vlan_card_name != pxe_net_card_name and https == "no"
-  tags: set_hosts
+  tags: ['add','del']
 
 - name: set ansible hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {internal_vip_vlan_card_name}}
   when: internal_vip_vlan_card_name == pxe_net_card_name and https == "yes" 
-  tags: set_hosts
+  tags: ['add','del']
 
 - name: set ansible hosts for ops by plan_table and pxeiplist
   shell: bash /root/tools/set_net_ssh/set_ansible_hosts.sh {{admin_vlan_card_name}}.{{internal_vip_vlanid}}
   when: internal_vip_vlan_card_name != pxe_net_card_name and https == "yes"
-  tags: set_hosts
+  tags: ['add','del']
