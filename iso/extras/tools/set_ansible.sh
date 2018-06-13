@@ -1,5 +1,5 @@
 #!/bin/bash
-
+mkdir -p /etc/ansible/
 cat << EOF > /etc/ansible/ansible.cfg
 [defaults]
 host_key_checking=False

@@ -3,8 +3,8 @@ set -x
 sed -i '$d' /etc/rc.d/rc.local
 systemctl start docker; sleep 3
 docker load < /root/cobbler.tar
-docker run -d --net=host --name cobbler -v /repo:/repo -v /var/lib/dhcpd:/var/lib/dhcpd cobbler:1.0
-sleep 60
+docker run -d --net=host --name cobbler -v /repo:/repo cobbler:1.0
+sleep 120
 docker cp /root/.ssh/id_rsa.pub cobbler:/var/www/cobbler/pub/
 docker exec cobbler cobbler import --name=CentOS-7 --path=/repo/ --kickstart=/var/lib/cobbler/kickstarts/centos-7.ks
 #set all netcard is eth*
