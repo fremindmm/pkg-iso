@@ -27,7 +27,7 @@ fi
 # **************************************************************************************
 OPENVSWITCH_PATH="/etc/kolla/neutron-openvswitch-agent"
 OPENVSWITCH_ID=`docker ps |grep Up|grep neutron-openvswitch-agent|awk -F' ' '{print $1}'`
-if [ ! -n ${OPENVSWITCH_ID} ];then
+if [ ! -n "${OPENVSWITCH_ID}" ];then
 OPENVSWITCH_ID=`docker ps |grep Up|grep centos-source-openvswitch-vswitchd|awk -F' ' '{print $1}'`
 fi
 #NEUTRON_SERVER_PATH="/etc/kolla/neutron-server"
