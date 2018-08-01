@@ -4,11 +4,15 @@ set -o xtrace
 set -e
 CARD=$1
 PLAN_TABLE=/root/tools/etc/pre_deploy/plan_table
+
+if [ ! -f /etc/ansible/pxe_list ];then
 mkdir -p /etc/ansible
 echo "[pxe]" > /etc/ansible/hosts
 
 docker exec -i cobbler cat /var/lib/dhcpd/dhcpd.leases |grep '^lease'| cut -d' ' -f2| sort -u|xargs -I {} echo {} >> /etc/ansible/hosts
-
+else
+cat /etc/ansible/pxe_list >>/etc/ansible/hosts
+fi
 # Add fingreprint on deploy node.
 #ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa << EOF
 # 
