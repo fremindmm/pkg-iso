@@ -24,6 +24,7 @@ pip install --no-index --find-links=http://127.0.0.1:81/pypi pywinrm
 pip install --no-index --find-links=http://127.0.0.1:81/pypi elasticsearch
 pip install --no-index --find-links=http://127.0.0.1:81/pypi -r /opt/kolla-ansible*/requirements.txt
 pip install --no-index --find-links=http://127.0.0.1:81/pypi /opt/kolla-ansible*/
+pip install /opt/kolla-ansible-4.0.3.dev36
 cp -r /opt/kolla-ansible*/etc/kolla /etc
 sed -i -e "s/eth0/$(ip -o link | cut -d: -f2 | sed -n 's/ //;2p')/" -e "s/eth1/$(ip -o link | cut -d: -f2 | sed -n 's/ //;3p')/" -e "s/10.10.10.254/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" -e "s/172.16.0.10/$(cat /etc/hosts | cut -d' ' -f1 | tail -n1)/" /etc/kolla/globals.yml
 /opt/kolla-ansible*/tools/generate_passwords.py 
