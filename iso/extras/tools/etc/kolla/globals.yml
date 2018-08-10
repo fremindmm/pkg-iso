@@ -177,7 +177,7 @@ enable_neutron_vpnaas: "no"
 #enable_searchlight: "no"
 #enable_senlin: "no"
 #enable_solum: "no"
-enable_swift: "yes"
+enable_swift: "no"
 #enable_telegraf: "no"
 #enable_tacker: "no"
 #enable_tempest: "no"
@@ -199,7 +199,7 @@ enable_swift: "yes"
 ceph_pool_type: "replicated"
 
 # Integrate ceph rados object gateway with openstack keystone
-enable_ceph_rgw_keystone: "no"
+enable_ceph_rgw_keystone: "yes"
 
 
 ##############################
@@ -275,7 +275,7 @@ designate_ns_record: "sample.openstack.org"
 #########################
 # Nova - Compute Options
 #########################
-#nova_backend_ceph: "{{ enable_ceph }}"
+nova_backend_ceph: "no"
 
 
 ##############################
