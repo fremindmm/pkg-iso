@@ -10,7 +10,7 @@
   roles:
     - set_hosts
     - ceph
-    - swift
+#    - swift
     - neutron
 
 - name: prepare openstack settings
