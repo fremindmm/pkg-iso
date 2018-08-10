@@ -20,10 +20,10 @@ external_ip_segment: "192.168.87"
 storage_vlan_card_name: "eth3"
 storage_vlanid: "85"
 storage_ip_segment: "192.168.85"
-swift_disk_list: "sdd sde sdf"
+#swift_disk_list: "sdd sde sdf"
 ceph_disk_list: [sdb,sdc]
-swift_storage_networklist: "192.168.85.6"
-swift_one_node_hostname: "computer02"
+#swift_storage_networklist: "192.168.85.6"
+#swift_one_node_hostname: "computer02"
 #tunnel network for vm to vm
 tunnel_vlan_card_name: "eth2"
 tunnel_vlanid: "86"
