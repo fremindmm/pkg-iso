@@ -105,6 +105,7 @@ ignoredisk --only-use=$device
 bootloader --location=mbr --driveorder=$device
 zerombr
 clearpart --all --drives=$device
+part biosboot --fstype=biosboot --size=1
 part /boot
 part /boot/efi
 EOF
