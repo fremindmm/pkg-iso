@@ -4,7 +4,7 @@
 # time.  This script downloads a cirros image and registers it.  Then it
 # configures networking and nova quotas to allow 40 m1.small instances
 # to be created.
-cp /root/kolla-ansible-4.0.3.dev36/cirros-0.3.4-x86_64-disk.img /root/
+cp /usr/share/cirros-0.3.4-x86_64-disk.img /root/
 IMAGE_URL=http://download.cirros-cloud.net/0.3.4/
 IMAGE=cirros-0.3.4-x86_64-disk.img
 IMAGE_NAME=cirros
