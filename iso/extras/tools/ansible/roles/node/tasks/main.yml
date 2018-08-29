@@ -23,6 +23,11 @@
   when: pxe_net_card_name != admin_vlan_card_name
   tags: add
 
+- name: set interworking vlan network for platform vm
+  script: /root/tools/set_interworking_vlan_interface.sh {{tm_vlan_card_name}}
+  run_once: False
+  tags: add
+
 - name: add vlan network for external
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{external_vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
   run_once: False

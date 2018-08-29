@@ -17,3 +17,12 @@
   hosts: deploy
   roles:
     - set_kolla_settings
+
+- name: change default gateway to management for node
+  hosts: all
+  roles:
+    - change_gateway
+- name: change default gateway to management for ops
+  hosts: deploy
+  roles: 
+    - change_gateway

@@ -1,5 +1,9 @@
 ---
 #The pxe is not multiplexed into the management network, and the management network is multiplexed into the service network.
+#
+- name: check all interface state is set UP
+  script: /root/tools/check_interface_state.sh
+
 - name: get the network connection ip for admin,storage logic network
   shell: |
     ping -c 2 "{{hostvars[item[0]]['ansible_' + item[1]].ipv4.address }}"
