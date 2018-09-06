@@ -84,6 +84,10 @@ openstack security group rule create --ingress --ethertype IPv4 \
 openstack security group rule create --ingress --ethertype IPv4 \
     --protocol tcp --dst-port 8080 ${ADMIN_SEC_GROUP}
 
+#Open security group entry ip tunnel protocol
+openstack security group rule create --ingress --ethertype IPv4 \
+    --protocol 4 ${ADMIN_SEC_GROUP} 
+
 if [ ! -f ~/.ssh/id_rsa.pub ]; then
     echo Generating ssh key.
     ssh-keygen -t rsa -f ~/.ssh/id_rsa
