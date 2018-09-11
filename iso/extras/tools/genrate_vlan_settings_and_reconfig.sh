@@ -3,7 +3,7 @@ set -o xtrace
 ADD=$1
 ###set br ,port
 VLAN_CARD=`cat /root/tools/etc/pre_deploy/global.yml |grep tm_vlan_card_name|awk -F'"' '{print $2}'`
-if [ ! -n $ADD ];then
+if [ ! -n "$ADD" ];then
 ansible node -m script -a "/root/tools/enable_vlan.sh ${VLAN_CARD}"
 else
 ansible pxe -i /root/tools/ansible/inventory/add_list -m script -a "/root/tools/enable_vlan.sh ${VLAN_CARD}"
