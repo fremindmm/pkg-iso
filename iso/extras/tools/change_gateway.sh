@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o xtrace
 PXE_CARD=$1
 MANAGE_CARD=$2
 MANAGE_GATEWAY=$3

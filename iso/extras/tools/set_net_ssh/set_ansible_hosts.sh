@@ -25,15 +25,23 @@ cat << EOF > /etc/hosts
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 EOF
 
+IS_VMWARE=`dmidecode -s system-serial-number|grep VMware`
 cat /etc/ansible/hosts | grep -v ^[[]
+if [ -n "${IS_VMWARE}" ];then
+cat ${PLAN_TABLE} |awk '{print $17"    "$16}' > ./add_hosts
+else
 cat ${PLAN_TABLE} |awk '{print $3"    "$2}' > ./add_hosts
+fi
 cat ./add_hosts >> /etc/hosts
 DEPLOY_IP=`ip a|grep "$CARD"|grep inet|awk -F' ' '{print $2}'|awk -F'/' '{print $1}'`
 echo $DEPLOY_IP `hostname` >> /etc/hosts
 # Config ansible default inventory.
 echo "[node]" >> /etc/ansible/hosts
+if [ -n "${IS_VMWARE}" ];then
+cat ${PLAN_TABLE} |awk '{print $16}' >> /etc/ansible/hosts
+else
 cat ${PLAN_TABLE} |awk '{print $2}' >> /etc/ansible/hosts
-
+fi
 # Create id_rsa.pub on deploy node.
 #ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa << EOF
 # 

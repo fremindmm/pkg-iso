@@ -275,7 +275,7 @@ designate_ns_record: "sample.openstack.org"
 #########################
 # Nova - Compute Options
 #########################
-nova_backend_ceph: "no"
+nova_backend_ceph: "yes"
 
 
 ##############################

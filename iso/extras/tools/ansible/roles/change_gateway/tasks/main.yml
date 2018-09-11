@@ -1,4 +1,13 @@
 - name: change host default gateway from pxe to management gateway
+  script: /root/tools/change_gateway.sh {{pxe_net_card_name}} {{admin_vlan_card_name}}.{{admin_vlanid}} {{admin_gateway}}
+  when: admin_vlanid|int != 0
+  tags: test_gateway
+
+- name: change host default gateway from pxe to management gateway
   script: /root/tools/change_gateway.sh {{pxe_net_card_name}} {{admin_vlan_card_name}} {{admin_gateway}}
+  when: admin_vlanid|int == 0
+  tags: test_gateway
+
 - name: restart network
   cron: name="restart network" job="systemctl restart network; sed -i '/restart network/d' /var/spool/cron/root"  
+  tags: test_gateway

@@ -10,8 +10,12 @@
 #SERIAL_NUMBER=`dmidecode -s system-serial-number | tr -d " " | tr -d '-' | cut -b 7-38`
 # Physical Machine use the next config.
 SERIAL_NUMBER=`dmidecode -s system-serial-number`
+IS_VMWARE=`dmidecode -s system-serial-number|grep VMware`
+if [ -n "${IS_VMWARE}" ];then
+HOST_NAME=`cat /tmp/plan_table|grep "$SERIAL_NUMBER"|awk '{print $16}'`
+else
 HOST_NAME=`cat /tmp/plan_table|grep "$SERIAL_NUMBER"|awk '{print $2}'`
-
+fi
 if [[ $HOST_NAME ]] ; then 
    hostnamectl set-hostname $HOST_NAME ; 
 else

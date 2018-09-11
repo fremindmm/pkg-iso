@@ -64,13 +64,13 @@ mv $TARGET_FILE  YiheOS-${TAG}-${date}.iso
 
 
 #upload iso to ftp##
-#ftp -vpn <<!
-#open dl.yihecloud.com
-#user ftp ftp
-#cd iaasos/
-#bin
-#put YiheOS-${TAG}-${date}.iso
-#close
-#bye
-#!
+ftp -vpn <<!
+open dl.yihecloud.com
+user ftp ftp
+cd iaasos/
+bin
+put YiheOS-${TAG}-${date}.iso
+close
+bye
+!
 
