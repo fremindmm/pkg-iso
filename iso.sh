@@ -40,7 +40,9 @@ OLD_V=`grep "kolla-ansible" ${MAKEISO_DIR}/images/ks.cfg|awk -F'/' '{print $6}'`
 
 #NEW_V=`ls /root/jenkins/kolla-ansible/dist`
 NEW_V=kolla-ansible-4.0.3.dev36.tar.gz
-cp -f ${KOLLA_ANSIBLE_DIR}/kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
+#cp -f ${KOLLA_ANSIBLE_DIR}/kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
+#copy the lastest kolla-ansible pkg
+cp -f ${KOLLA_ANSIBLE_DIR}/source/kolla-ansible-4.0.3.dev36/dist/kolla-ansible-4.0.3.dev36.tar.gz  ${MAKEISO_DIR}/extras/
 
 if [ ! "${OLD_V%% *}" = $NEW_V ];then
 sed -i  "s/$OLD_V/$NEW_V /g" ${ISO_DIR}/extras/init.sh
