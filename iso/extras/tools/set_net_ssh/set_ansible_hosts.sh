@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Config tmp ansible inventory. 
 set -o xtrace
-set -e
+#set -e
 CARD=$1
 PLAN_TABLE=/root/tools/etc/pre_deploy/plan_table
 
