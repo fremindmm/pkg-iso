@@ -35,24 +35,26 @@
 - name: add vlan network for admin
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{admin_vlan_card_name}} {{admin_vlanid}} {{admin_ip_segment}} 
   run_once: False
-  when: pxe_net_card_name != admin_vlan_card_name
+  when: pxe_net_card_name != admin_vlan_card_name and admin_vlanid|int != 0
 
 - name: add vlan network for external
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{external_vlan_card_name}} {{external_vlanid}} {{external_ip_segment}}
+  when: external_vlanid|int != 0
   run_once: False
 
 - name: add vlan network for storage
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{storage_vlan_card_name}} {{storage_vlanid}} {{storage_ip_segment}}
+  when: storage_vlanid|int != 0
   run_once: False
 
 - name: add tunnel network for vm to vm (vxlan)
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{tunnel_vlan_card_name}} {{tunnel_vlanid}} {{tunnel_ip_segment}}
-  when: tunnel_vlanid != admin_vlanid
+  when: tunnel_vlanid != admin_vlanid and tunnel_vlanid|int != 0
   run_once: False
 
 - name: add internal vip interface for https
   shell: bash /tmp/add_vlan_interface.sh {{pxe_net_card_name}} {{internal_vip_vlan_card_name}} {{internal_vip_vlanid}} {{internal_vip_ip_segment}}
-  when: https == "yes"
+  when: https == "yes" and internal_vip_vlanid|int != 0
   run_once: False
   tags: ops
 #- name: restart network
