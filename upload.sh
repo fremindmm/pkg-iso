@@ -1,5 +1,6 @@
 #!/bin/bash
-FILE=*.pdf
+#FILE=deploy_miny_iso.pdf
+FILE=docker-registry.tar.gz
 #FILE=/root/src/make-iso/mkiso/*.iso
 #upload iso to ftp##
 ftp -vpn <<!
