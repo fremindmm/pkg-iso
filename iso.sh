@@ -26,6 +26,7 @@ KOLLA_ANSIBLE_DIR="/root/jenkins/"
 date=`date +"%Y%m%d"`
 
 #rm -f ${MAKEISO_DIR}/extras/centos-source-ocata-inspur.tar.gz
+#cp -L ${TARGET_DIR}/latest_miny ${MAKEISO_DIR}/extras/docker-registry.tar.gz
 cp -L ${TARGET_DIR}/latest ${MAKEISO_DIR}/extras/docker-registry.tar.gz
 
 #pull kolla-ansible and update to iso
