@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# This script is meant to be run once after running start for the first
+# time.  This script downloads a cirros image and registers it.  Then it
+# configures networking and nova quotas to allow 40 m1.small instances
+# to be created.
+#cp /usr/share/cirros-0.3.4-x86_64-disk.img /root/
+#IMAGE_URL=http://download.cirros-cloud.net/0.3.4/
+#IMAGE=cirros-0.3.4-x86_64-disk.img
+source /etc/kolla/admin-openrc.sh
+IMAGE_NAME=cirros
+#配置多个vlan 此处必须修改cidr，网段，网关，网络名称，避免同其他vlan 冲突
+EXT_NET_CIDR='192.168.84.0/24'
+EXT_NET_RANGE='start=192.168.84.10,end=192.168.84.200'
+EXT_NET_GATEWAY='192.168.84.1'
+NEW_NETWORK_NAME="public-vlan84"
+VLAN_CARD=`cat /root/tools/etc/pre_deploy/global.yml |grep tm_vlan_card_name|awk -F'"' '{print $2}'`
+# Sanitize language settings to avoid commands bailing out
+# with "unsupported locale setting" errors.
+unset LANG
+unset LANGUAGE
+LC_ALL=C
+export LC_ALL
+for i in curl openstack; do
+    if [[ ! $(type ${i} 2>/dev/null) ]]; then
+        if [ "${i}" == 'curl' ]; then
+            echo "Please install ${i} before proceeding"
+        else
+            echo "Please install python-${i}client before proceeding"
+        fi
+        exit
+    fi
+done
+# Move to top level directory
+REAL_PATH=$(python -c "import os,sys;print os.path.realpath('$0')")
+cd "$(dirname "$REAL_PATH")/.."
+
+# Test for credentials set
+if [[ "${OS_USERNAME}" == "" ]]; then
+    echo "No Keystone credentials specified.  Try running source openrc"
+    exit
+fi
+
+# Test to ensure configure script is run only once
+echo Configuring neutron.
+openstack network create --provider-physical-network default --provider-network-type vlan ${NEW_NETWORK_NAME}
+openstack subnet create \
+    --allocation-pool ${EXT_NET_RANGE} --network ${NEW_NETWORK_NAME} \
+    --subnet-range ${EXT_NET_CIDR} --gateway ${EXT_NET_GATEWAY} \
+    --dns-nameserver 8.8.8.8 ${NEW_NETWORK_NAME}-subnet
+
+#openstack network create --provider-network-type vxlan demo-net
+#openstack subnet create --subnet-range 10.0.0.0/24 --network demo-net \
+#    --gateway 10.0.0.1 --dns-nameserver 8.8.8.8 demo-subnet
+#
+#openstack router create demo-router
+#openstack router add subnet demo-router demo-subnet
+#openstack router set --external-gateway public1 demo-router
+
+# Get admin user and tenant IDs
+ADMIN_USER_ID=$(openstack user list | awk '/ admin / {print $2}')
+ADMIN_PROJECT_ID=$(openstack project list | awk '/ admin / {print $2}')
+ADMIN_SEC_GROUP=$(openstack security group list --project ${ADMIN_PROJECT_ID} | awk '/ default / {print $2}')
+
+DEMO_NET_ID=$(openstack network list | awk '/ "${NEW_NETWORK_NAME}" / {print $2}')
+
+cat << EOF
+
+Done.
+
+To deploy a demo instance, run:
+
+openstack server create \\
+    --image ${IMAGE_NAME} \\
+    --flavor m1.tiny \\
+    --key-name mykey \\
+    --nic net-id=${DEMO_NET_ID} \\
+    demo-vlan
+EOF
