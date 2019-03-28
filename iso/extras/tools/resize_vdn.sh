@@ -2,6 +2,7 @@
 DIR="/data"
 DISK="vdb"
 FORMART="ext4"
+mkdir -p ${DIR}
 function part_disk_and_init_formart(){
     local DISK=$1
     local DIR=$2
